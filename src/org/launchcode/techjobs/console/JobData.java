@@ -4,12 +4,11 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import javax.swing.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -36,9 +35,9 @@ public class JobData {
         ArrayList<String> values = new ArrayList<>();
 
         for (HashMap<String, String> row : allJobs) {
-            String aValue = row.get(field);
+            String aValue = row.get(field).toLowerCase();
 
-            if (!values.contains(aValue)) {
+            if (!values.contains(aValue.toLowerCase())) {
                 values.add(aValue);
             }
         }
@@ -74,14 +73,38 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
 
         return jobs;
+    }
+//888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+    public static ArrayList<HashMap<String, String>> findByValue(String searchValue) {
+
+        System.out.println("FindByValue method Called");
+        // load data, if not already loaded
+        loadData();
+        ArrayList<HashMap<String, String>> outputMapList = new ArrayList<HashMap<String, String>>();
+
+        for (int i = 0; i < allJobs.size(); i++) {
+            HashMap thisJob = allJobs.get(i);
+            Set keys = thisJob.keySet();
+            System.out.println("*****");
+            for (Iterator j = ((Set) keys).iterator(); j.hasNext(); ) {
+                String key = (String) j.next();
+                String value = ((String) thisJob.get(key)).toLowerCase();
+
+                if (value.contains(searchValue.toLowerCase())) {
+                    outputMapList.add(thisJob);
+                }
+
+            }
+        }
+        return outputMapList;
     }
 
     /**
